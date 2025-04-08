@@ -1,0 +1,77 @@
+pipeline {
+    agent any
+
+    environment {
+        XRAY_AUTH_URL = 'https://xray.cloud.getxray.app/api/v2/authenticate'
+        XRAY_EXPORT_URL = 'https://xray.cloud.getxray.app/api/v2/import/execution/robot?projectKey=POEI20252'
+        CLIENT_ID = '6E635966EBAA4D79BED0403429B9568F'
+        CLIENT_SECRET = '325cd0f88ba4d83360cae863783ad63c06a274e8b2e8820a134a8af91a410bc0'
+        XRAY_TOKEN=""
+    }
+
+    stages {
+        stage('Authenticate with Xray') {
+            steps {
+                script {
+                    def response = bat(script: """
+                        curl -s -H "Content-Type: application/json" -X POST ^
+                        ${env.XRAY_AUTH_URL} ^
+                        --data "{ \\"client_id\\": \\"${env.CLIENT_ID}\\", \\"client_secret\\": \\"${env.CLIENT_SECRET}\\" }"
+                    """, returnStdout: true).trim()
+                    def lines = response.readLines()
+                    def token = lines[1].replaceAll('"', '').trim()
+                   XRAY_TOKEN = token
+                   echo "Xray Token: ${XRAY_TOKEN}"
+
+                    // Récupère la dernière ligne = le token
+
+
+
+
+                }
+            }
+        }
+
+       stage('Importer les features de Xray') {
+                          steps {
+                              script {
+                                  def exportResponse = bat(
+                                      script: """
+                                          curl -H "Content-Type: application/json" -X GET -H "Authorization: Bearer ${XRAY_TOKEN}"  "https://xray.cloud.getxray.app/api/v2/export/cucumber?keys=POEI20252-519" -o "xray_features.zip"
+                                      """,
+                                      returnStdout: true
+                                  ).trim()
+                                   bat """
+                                              powershell -Command "Expand-Archive -Path 'xray_features.zip' -DestinationPath 'src\\test\\resources\\features' -Force"
+                                          """
+                                  echo "Exported Xray features: ${exportResponse}"
+                                  echo "Features saved in xray_features.zip"
+                              }
+                          }
+                      }
+        stage('Run Tests') {
+        steps{
+            bat 'mvn test -Dcucumber.filter.tags="@ilhem" '
+        }}
+
+        stage('Upload Results to Xray') {
+            steps {
+                script {
+                    def result = bat(
+                        script: """
+                           curl -X POST https://xray.cloud.getxray.app/api/v2/import/execution/cucumber ^
+                                                   -H "Content-Type: application/json" ^
+                                                   -H "Authorization: Bearer ${XRAY_TOKEN}" ^
+                                                   --data @"target/cucumber.json"
+                        """,
+                        returnStdout: true
+                    ).trim()
+
+                    echo "📤 Résultat upload Xray: ${result}"
+                }
+            }
+        }
+
+
+    }
+}
