@@ -35,7 +35,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    bat 'robot -d Logs' // Exécute les tests
+                    bat 'robot login.robot' // Exécute les tests
                 }
             }
         }
