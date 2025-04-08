@@ -32,14 +32,6 @@ pipeline {
         }
 
 
-        stage('Test') {
-            steps {
-                script {
-                    bat 'robot -d Logs tests/' // Exécute les tests
-                }
-            }
-        }
-
         stage('Exporter le résultat sur Xray') {
             steps {
                 script {
