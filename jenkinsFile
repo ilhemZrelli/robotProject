@@ -46,19 +46,30 @@ pipeline {
                 }
             }
         }
-          stage('send result to dsicord') {
-            steps{
-                script{
-                    def sendToDiscord=bat(
-                        script:"""
-                       curl -X POST https://discordapp.com/api/webhooks/1359154405147934992/2RwoZD57gNSStkB8yxAUT4O7jAe7OOAECZTCuMj9tDW6RBHYUaCjgon1E05MoTjsaQlg ^
-                        -H "Content-Type: application/json" ^
-                        -d "{\"username\": \"Ilhem\", \"${ExportResponse}\": \"D\"}" ^
-                        """
-                    )
-                }
+         stage('Send Result to Discord') {
+    steps {
+        script {
+            // Ensure ExportResponse is a valid variable
+            def ExportResponse = "Test Result"  // Replace with your actual variable
+            
+            // Create a JSON message
+            def jsonMessage = """
+            {
+                "username": "Ilhem",
+                "content": "Test result: ${ExportResponse}"
             }
-          }
+            """
+            
+            // Send to Discord using curl
+            bat(script: """
+                curl -X POST https://discordapp.com/api/webhooks/1359154405147934992/2RwoZD57gNSStkB8yxAUT4O7jAe7OOAECZTCuMj9tDW6RBHYUaCjgon1E05MoTjsaQlg ^
+                -H "Content-Type: application/json" ^
+                -d "${jsonMessage}"
+            """)
+        }
+    }
+}
+
 
     }
 }
