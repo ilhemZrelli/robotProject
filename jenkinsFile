@@ -46,7 +46,7 @@ pipeline {
                 }
             }
         }
-          stage('Exporter le résultat sur Xray') {
+          stage('send result to dsicord') {
             steps{
                 script{
                     def sendToDiscord=bat(
