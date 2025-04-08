@@ -6,6 +6,7 @@ pipeline {
         XRAY_AUTH_URL = 'https://xray.cloud.getxray.app/api/v2/authenticate'
         GIT_REPO = 'https://github.com/ilhemZrelli/robotProject.git'
         XRAY_TOKEN = ""
+        WEBHOOK_URL = 'https://discordapp.com/api/webhooks/1359154405147934992/2RwoZD57gNSStkB8yxAUT4O7jAe7OOAECZTCuMj9tDW6RBHYUaCjgon1E05MoTjsaQlg'
     }
 
     stages {
@@ -51,7 +52,7 @@ pipeline {
         script {
             // Define the test result and the path to the XML output file
             def testResult = "Test execution completed: Passed all tests"
-            def outputFilePath = "path/to/output.xml" // Update with the actual path to your output.xml file
+            def outputFilePath = "Logs/output.xml" // Update with the actual path to your output.xml file
 
             // Create the payload with the test result message
             def payloadJson = """
