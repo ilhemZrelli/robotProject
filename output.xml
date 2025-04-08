@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.2.2 (Python 3.13.2 on win32)" generated="2025-04-08T12:00:15.725262" rpa="false" schemaversion="5">
+<suite id="s1" name="uploadReport" source="c:\Users\IB\Desktop\dev\robotFrameworkProject\uploadReport.robot">
+<kw name="Get Access Token" type="SETUP">
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2025-04-08T12:00:16.036593" level="INFO">${headers} = {'Content-Type': 'application/json'}</msg>
+<var>${headers}</var>
+<arg>Content-Type=application/json</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2025-04-08T12:00:16.036278" elapsed="0.001920"/>
+</kw>
+<kw name="Create Dictionary" owner="BuiltIn">
+<msg time="2025-04-08T12:00:16.038708" level="INFO">${body} = {'client_id': '6E635966EBAA4D79BED0403429B9568F', 'client_secret': '325cd0f88ba4d83360cae863783ad63c06a274e8b2e8820a134a8af91a410bc0'}</msg>
+<var>${body}</var>
+<arg>client_id=${CLIENT_ID}</arg>
+<arg>client_secret=${CLIENT_SECRET}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<status status="PASS" start="2025-04-08T12:00:16.038404" elapsed="0.000410"/>
+</kw>
+<kw name="Create Session" owner="RequestsLibrary">
+<msg time="2025-04-08T12:00:16.039175" level="INFO">Creating Session using : alias=xray, url=https://xray.cloud.getxray.app/api/v2/authenticate, headers={'Content-Type': 'application/json'},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
+<arg>xray</arg>
+<arg>${XRAY_AUTH_URL}</arg>
+<arg>headers=${headers}</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<status status="PASS" start="2025-04-08T12:00:16.038941" elapsed="0.000447"/>
+</kw>
+<kw name="POST" owner="RequestsLibrary">
+<msg time="2025-04-08T12:00:16.042081" level="FAIL">MissingSchema: Invalid URL 'xray': No scheme supplied. Perhaps you meant https://xray?</msg>
+<var>${response}</var>
+<arg>xray</arg>
+<arg>""</arg>
+<arg>json=${body}</arg>
+<doc>Sends a POST request.</doc>
+<status status="FAIL" start="2025-04-08T12:00:16.039499" elapsed="0.005033">MissingSchema: Invalid URL 'xray': No scheme supplied. Perhaps you meant https://xray?</status>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<arg>Status Code: ${response.status_code}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="NOT RUN" start="2025-04-08T12:00:16.044734" elapsed="0.000080"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<arg>Token raw: ${response.content}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="NOT RUN" start="2025-04-08T12:00:16.044918" elapsed="0.000063"/>
+</kw>
+<kw name="Should Be Equal As Integers" owner="BuiltIn">
+<arg>${response.status_code}</arg>
+<arg>200</arg>
+<doc>Fails if objects are unequal after converting them to integers.</doc>
+<status status="NOT RUN" start="2025-04-08T12:00:16.045074" elapsed="0.000063"/>
+</kw>
+<kw name="Evaluate" owner="BuiltIn">
+<var>${token}</var>
+<arg>str(${response.content}).strip('"')</arg>
+<doc>Evaluates the given expression in Python and returns the result.</doc>
+<status status="NOT RUN" start="2025-04-08T12:00:16.045231" elapsed="0.000073"/>
+</kw>
+<kw name="Log" owner="BuiltIn">
+<arg>Clean token: ${token}</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="NOT RUN" start="2025-04-08T12:00:16.045397" elapsed="0.000052"/>
+</kw>
+<kw name="Set Suite Variable" owner="BuiltIn">
+<arg>${ACCESS_TOKEN}</arg>
+<arg>${token}</arg>
+<doc>Makes a variable available everywhere within the scope of the current suite.</doc>
+<status status="NOT RUN" start="2025-04-08T12:00:16.045548" elapsed="0.000059"/>
+</kw>
+<status status="FAIL" start="2025-04-08T12:00:16.035580" elapsed="0.010153">MissingSchema: Invalid URL 'xray': No scheme supplied. Perhaps you meant https://xray?</status>
+</kw>
+<test id="s1-t1" name="Upload Test Results to Xray" line="38">
+<status status="FAIL" start="2025-04-08T12:00:16.045839" elapsed="0.000553">Parent suite setup failed:
+MissingSchema: Invalid URL 'xray': No scheme supplied. Perhaps you meant https://xray?</status>
+</test>
+<status status="FAIL" start="2025-04-08T12:00:15.728518" elapsed="0.318953">Suite setup failed:
+MissingSchema: Invalid URL 'xray': No scheme supplied. Perhaps you meant https://xray?</status>
+</suite>
+<statistics>
+<total>
+<stat pass="0" fail="1" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat name="uploadReport" id="s1" pass="0" fail="1" skip="0">uploadReport</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
